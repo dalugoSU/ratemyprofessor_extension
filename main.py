@@ -10,11 +10,14 @@ root.title("RateMyProfessor Extension")
 root.maxsize(650,500)
 root.minsize(650,500)
 
+google = False
+
 def get_information():
 
+    global google
     name = professor_name_var.get()
     school = professor_institution_var.get()
-
+    bottom_text_output.delete("1.0", tk.END)
     professor_search = f"{name} {school} RateMyProfessor"
 
     # gets url from professor's rate my professor page
@@ -35,12 +38,14 @@ def get_information():
             would_take_again = soup.find(class_="FeedbackItem__FeedbackNumber-uof32n-1 kkESWs").get_text()
             stundet_review = str(soup.find('div', {"class": "TeacherRatingTabs__StyledTabs-pnmswv-0 lloXQq"}).find_all(class_="Comments__StyledComments-dzzyvm-0 gRjWel")).replace('</div>,', '').split('<div class="Comments__StyledComments-dzzyvm-0 gRjWel">')
 
-            # Outputs on text box
+
             bottom_text_output.insert(tk.END, f"Name: {prof_name}\n")
             bottom_text_output.insert(tk.END, f"Institution: {school}\n")
             bottom_text_output.insert(tk.END, f"Rating: {rating}/5\n")
             bottom_text_output.insert(tk.END, f"{number_of_ratins}\n")
             bottom_text_output.insert(tk.END, f"Would take again: {would_take_again}\n\n")
+            google = True
+
             for item in range(6):
                 bottom_text_output.insert(tk.END, f"{item + 1}) {stundet_review[item + 1]}\n\n")
         except AttributeError:
@@ -49,27 +54,29 @@ def get_information():
     else:
         bottom_text_output.insert(tk.END, "\n\n\n\n\n\n\n\nThis professor is not available to check\nNothing entered or check for misspellings")
 
-# These two functions use the url to open the window in case you want more information
+
 def get_more_information():
-    name = professor_name_var.get()
-    school = professor_institution_var.get()
+    if google == True:
+        name = professor_name_var.get()
+        school = professor_institution_var.get()
 
-    professor_search = f"{name} {school} RateMyProfessor"
-    for s in search(professor_search, tld="co.in", num=1, stop=1, pause=1):
-        url = s  # url, only does one search, stops at first option.
-        
-    webbrowser.open(url)
+        professor_search = f"{name} {school} RateMyProfessor"
+        for s in search(professor_search, tld="co.in", num=1, stop=1, pause=1):
+            url = s  # url, only does one search, stops at first option.
+
+        webbrowser.open(url)
+    else:
+        bottom_text_output.delete("1.0", tk.END)
+        bottom_text_output.insert(tk.END, "\n\n\n\n\n\n\n\nNo Professor Information to Look Up")
 
 
-# Clears screen for each new search
-def clear_screen():
-    bottom_text_output.delete("1.0", tk.END)
+#def clear_screen():
+   # bottom_text_output.delete("1.0", tk.END)
 
-# Allows to pull text from entry boxes
+
 professor_name_var = StringVar()
 professor_institution_var = StringVar()
 
-# GUI Code
 main_frame = tk.Frame(root, bg='grey')
 main_frame.pack(fill='both', expand=True)
 
@@ -88,7 +95,7 @@ professor_name_entry_label.place(relx=0.14, rely=0.18)
 professor_name_entry_label = tk.Label(top_frame, text='Institution')
 professor_name_entry_label.place(relx=0.14, rely=0.58)
 
-submit_button = tk.Button(top_frame, text='Get Information', command=lambda: [clear_screen(), get_information()])
+submit_button = tk.Button(top_frame, text='Get Information', command=lambda: get_information())
 submit_button.place(relx=0.7, rely=0.17)
 
 more_info = tk.Button(top_frame, text='More Info', command=lambda: get_more_information())
@@ -97,4 +104,4 @@ more_info.place(relx=0.7, rely=0.6)
 bottom_text_output = tk.Text(main_frame, bg='light grey')
 bottom_text_output.place(relwidth=0.9, relheight=0.7, relx=0.05, rely=0.25)
 
-root.mainloop() # Allows window to keep running until closed
+root.mainloop()
