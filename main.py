@@ -57,11 +57,9 @@ def get_more_information():
     professor_search = f"{name} {school} RateMyProfessor"
     for s in search(professor_search, tld="co.in", num=1, stop=1, pause=1):
         url = s  # url, only does one search, stops at first option.
-    return url
-
-
-def open(url):
+        
     webbrowser.open(url)
+
 
 # Clears screen for each new search
 def clear_screen():
@@ -93,7 +91,7 @@ professor_name_entry_label.place(relx=0.14, rely=0.58)
 submit_button = tk.Button(top_frame, text='Get Information', command=lambda: [clear_screen(), get_information()])
 submit_button.place(relx=0.7, rely=0.17)
 
-more_info = tk.Button(top_frame, text='More Info', command=lambda: open(get_more_information()))
+more_info = tk.Button(top_frame, text='More Info', command=lambda: get_more_information())
 more_info.place(relx=0.7, rely=0.6)
 
 bottom_text_output = tk.Text(main_frame, bg='light grey')
