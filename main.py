@@ -5,12 +5,13 @@ from googlesearch import search
 import requests
 import webbrowser
 
+# Main window settings and title
 root = tk.Tk()
 root.title("RateMyProfessor Extension")
 root.maxsize(650,500)
 root.minsize(650,500)
 
-google = False
+google = False # If this is false, more_info function returns no results to get more info on. If get_information() function returns results, google sets to True
 
 def get_information():
 
@@ -54,7 +55,7 @@ def get_information():
     else:
         bottom_text_output.insert(tk.END, "\n\n\n\n\n\n\n\nThis professor is not available to check\nNothing entered or check for misspellings")
 
-
+# Once info is returned, you can look up more info on the rate my professor page.
 def get_more_information():
     if google == True:
         name = professor_name_var.get()
@@ -70,13 +71,11 @@ def get_more_information():
         bottom_text_output.insert(tk.END, "\n\n\n\n\n\n\n\nNo Professor Information to Look Up")
 
 
-#def clear_screen():
-   # bottom_text_output.delete("1.0", tk.END)
-
-
+# Strings to get inputs from entries
 professor_name_var = StringVar()
 professor_institution_var = StringVar()
 
+# GUI Code
 main_frame = tk.Frame(root, bg='grey')
 main_frame.pack(fill='both', expand=True)
 
@@ -104,4 +103,4 @@ more_info.place(relx=0.7, rely=0.6)
 bottom_text_output = tk.Text(main_frame, bg='light grey')
 bottom_text_output.place(relwidth=0.9, relheight=0.7, relx=0.05, rely=0.25)
 
-root.mainloop()
+root.mainloop() # Allows window to run until closed
