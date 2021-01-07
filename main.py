@@ -16,9 +16,11 @@ google = False # If this is false, more_info function returns no results to get 
 def get_information():
 
     global google
+
+    bottom_text_output.delete("1.0", tk.END)
+    
     name = professor_name_var.get()
     school = professor_institution_var.get()
-    bottom_text_output.delete("1.0", tk.END)
     professor_search = f"{name} {school} RateMyProfessor"
 
     # gets url from professor's rate my professor page
@@ -35,17 +37,19 @@ def get_information():
             # Information indexing and cleaning
             prof_name = soup.find(class_="NameTitle__Name-dowf0z-0 cfjPUG").get_text()
             rating = soup.find(class_="RatingValue__Numerator-qw8sqy-2 liyUjw").get_text()
-            number_of_ratins = soup.find(class_="RatingValue__NumRatings-qw8sqy-0 jMkisx").get_text().replace('Overall Quality ', '')
+            number_of_ratins = soup.find(class_="RatingValue__NumRatings-qw8sqy-0 jMkisx").get_text().replace('Overall Quality ', '').replace('Â', '')
             would_take_again = soup.find(class_="FeedbackItem__FeedbackNumber-uof32n-1 kkESWs").get_text()
             stundet_review = str(soup.find('div', {"class": "TeacherRatingTabs__StyledTabs-pnmswv-0 lloXQq"}).find_all(class_="Comments__StyledComments-dzzyvm-0 gRjWel")).replace('</div>,', '').split('<div class="Comments__StyledComments-dzzyvm-0 gRjWel">')
-
-
+            
+            # Outputs from gathered information
             bottom_text_output.insert(tk.END, f"Name: {prof_name}\n")
             bottom_text_output.insert(tk.END, f"Institution: {school}\n")
             bottom_text_output.insert(tk.END, f"Rating: {rating}/5\n")
             bottom_text_output.insert(tk.END, f"{number_of_ratins}\n")
             bottom_text_output.insert(tk.END, f"Would take again: {would_take_again}\n\n")
-            google = True
+            bottom_text_output.insert(tk.END, f"Top Reviews:\n\n")
+            
+            google = True # After successful query, this is set to True allowing the get_more_info() function to execute
 
             for item in range(6):
                 bottom_text_output.insert(tk.END, f"{item + 1}) {stundet_review[item + 1]}\n\n")
